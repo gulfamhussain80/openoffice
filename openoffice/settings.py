@@ -77,6 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'openoffice',
+        
     }
 }
 
