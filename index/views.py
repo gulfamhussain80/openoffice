@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from .models import User
@@ -13,12 +13,14 @@ def userView(request):
             form.save()
             return redirect("home")
         elif form.is_valid() and request.POST.get("loginbtn"):
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
+            username = request.POST.get('username','')
+            password = request.POST.get('password','')
+            user = User.objects.get(username=username,password=password)
             if user is not None:
-                login(request, user)
-                return redirect("home")
+                return HttpResponseRedirect("/home")
+            else:
+                return HttpResponse("Invalid"+username+" "+password)
+
     else:
         form=UserForm()
     return render(request,"index/index.html",{"form":form})
